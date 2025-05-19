@@ -3,27 +3,30 @@ import './index.css'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import Games from './pages/games/games';
-import Game from './pages/game/game';
-import Login from './pages/login/login';
+import GamesPage from './pages/games-page/games-page';
+import GamePage from './pages/game-page/game-page';
+import LoginPage from './pages/login-page/login-page';
+import GamesProvider from './data/games-provider';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Games />,
+    element: <GamesPage />,
   },
   {
     path: "/:gameId",
-    element: <Game />,
+    element: <GamePage />,
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <LoginPage />,
   },
 ]);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <GamesProvider>
+      <RouterProvider router={router} />
+    </GamesProvider>
   </StrictMode>,
 );
