@@ -8,13 +8,13 @@ const COOLDOWN = 1000 * 60;
 
 const initialGames: Array<Game> = new Array(5)
   .fill(null)
-  .map(() => {
+  .map((_item, i: number) => {
     const now = Date.now();
     const start = now + (Math.random() > 0.5 ? -1 : 1) * getRandom(0, 1000 * 60 * 5);
 
     return {
       end: new Date(start + DURATION),
-      id: Math.random().toString().slice(2),
+      id: i.toString(),
       start: new Date(start),
       state: (
         (now >= start + DURATION + COOLDOWN ? GameState.ENDED : null) ||
