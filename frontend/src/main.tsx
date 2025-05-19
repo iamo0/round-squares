@@ -24,8 +24,7 @@ const router = createBrowserRouter([
       const gameToDisplay = initialGames.find((g) => g.id === gameId);
 
       if (gameToDisplay === undefined) {
-        redirect("/404");
-        return;
+        return redirect("/404");
       }
 
       return gameToDisplay;
@@ -37,7 +36,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/404",
-    element: <>Игра не найдена</>
+    element: <>Игра не найдена</>,
   }
 ]);
 
