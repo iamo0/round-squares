@@ -1,16 +1,33 @@
 import { NavLink, useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
 import type { Click } from "../../types/click";
-import type { Game } from "../../types/game";
-import { getGameState } from "../../data/initial-games";
+import { GameState, type Game } from "../../types/game";
+import { getGameEndTimestamp, getGameState } from "../../data/initial-games";
 
 export default function GamePage() {
   const game = useLoaderData<Game>();
 
   const [clicks, setClicks] = useState<Click[]>([]);
+  const [timeLeft, setTimeLeft] = useState(-1);
+  const [timer, setTimer] = useState<number|undefined>(undefined);
+
+  useEffect(function() {
+    setTimer(setInterval(function() {
+      setTimeLeft(getGameEndTimestamp(game) - Date.now());
+    }, 1000));
+
+    return function() {
+      clearInterval(timer);
+      setTimer(undefined);
+    }
+  }, []);
 
   function handleDuckClick() {
+    if (getGameState(game) !== GameState.ACTIVE) {
+      return;
+    }
+
     setClicks([...clicks, {
       date: Date.now(),
     }]);
@@ -30,7 +47,7 @@ export default function GamePage() {
       }}>Click me!</button>
       <div className="game-round-stats">
         <div className="game-round-stats-state">{getGameState(game)}</div>
-        <div className="game-round-stats-timer">00:00</div>
+        <div className="game-round-stats-timer">{timeLeft}</div>
         <div className="game-round-stats-points">{calculatePoints(clicks)}</div>
       </div>
     </main>
