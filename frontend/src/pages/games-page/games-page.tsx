@@ -1,6 +1,6 @@
 import { NavLink, useLoaderData } from "react-router-dom";
 import { GameState, type Game } from "../../types/game";
-import { getGameState } from "../../data/initial-games";
+import { getGameCooldownTimestamp, getGameEndTimestamp, getGameState } from "../../data/initial-games";
 
 const GameStateName = new Map([
   [GameState.ACTIVE, "Активен"],
@@ -17,8 +17,8 @@ export default function GamesPage() {
       <NavLink to={`/${g.id}`}>
         <h2 className="games-item-id">{g.id}</h2>
         <div className="games-item-timeframe">
-          <div className="games-item-timeframe-start">{g.start.toISOString()}</div>
-          <div className="games-item-timeframe-end">{g.end.toISOString()}</div>
+          <div className="games-item-timeframe-start">{new Date(getGameCooldownTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
+          <div className="games-item-timeframe-end">{new Date(getGameEndTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
         </div>
         <div className="games-item-state">Статус: {GameStateName.get(getGameState(g))}</div>
       </NavLink>

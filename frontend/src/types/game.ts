@@ -6,7 +6,6 @@ export enum GameState {
 };
 
 export type Game = {
-  end: Date,
   id: string,
   start: Date,
 }

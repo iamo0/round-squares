@@ -12,7 +12,6 @@ export const initialGames: Array<Game> = new Array(5)
     const start = now + (Math.random() > 0.5 ? -1 : 1) * getRandom(0, 1000 * 60 * 5);
 
     return {
-      end: new Date(start + DURATION),
       id: i.toString(),
       start: new Date(start),
     };
@@ -24,8 +23,16 @@ export function getGameState(game: Game) {
 
   return (
     (now >= +game.start + DURATION + COOLDOWN ? GameState.ENDED : null) ||
-    (now > +game.start + DURATION && now < +game.start + DURATION + COOLDOWN ? GameState.COOLDOWN : null) ||
-    (now >= +game.start && now < +game.start + DURATION ? GameState.ACTIVE : null) ||
+    (now > +game.start && now < +game.start + COOLDOWN ? GameState.COOLDOWN : null) ||
+    (now >= +game.start + COOLDOWN && now < +game.start + DURATION + COOLDOWN ? GameState.ACTIVE : null) ||
     GameState.WAITING
   );
+}
+
+export function getGameCooldownTimestamp(game: Game) {
+  return +game.start + COOLDOWN;
+}
+
+export function getGameEndTimestamp(game: Game) {
+  return +game.start + COOLDOWN + DURATION;
 }

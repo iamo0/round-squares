@@ -3,6 +3,7 @@ import { useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
 import type { Click } from "../../types/click";
 import type { Game } from "../../types/game";
+import { getGameState } from "../../data/initial-games";
 
 export default function GamePage() {
   const game = useLoaderData<Game>();
@@ -19,7 +20,7 @@ export default function GamePage() {
     <header className="game-header">
       <NavLink to="/" className="game-header-exit">Выйти</NavLink>
       <div className="game-header-status" title={game.id}>
-        {game.state}
+        {getGameState(game)}
       </div>
       <div className="game-header-username">%username%</div>
     </header>
@@ -28,7 +29,7 @@ export default function GamePage() {
         zoom: 3,
       }}>Click me!</button>
       <div className="game-round-stats">
-        <div className="game-round-stats-state">{game.state}</div>
+        <div className="game-round-stats-state">{getGameState(game)}</div>
         <div className="game-round-stats-timer">00:00</div>
         <div className="game-round-stats-points">{calculatePoints(clicks)}</div>
       </div>
