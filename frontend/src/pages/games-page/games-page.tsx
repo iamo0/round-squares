@@ -1,13 +1,6 @@
 import { NavLink, useLoaderData } from "react-router-dom";
-import { GameState, type Game } from "../../types/game";
+import { GameStateName, type Game } from "../../types/game";
 import { getGameCooldownTimestamp, getGameEndTimestamp, getGameState } from "../../data/initial-games";
-
-const GameStateName = new Map([
-  [GameState.ACTIVE, "Активен"],
-  [GameState.COOLDOWN, "Cooldown"],
-  [GameState.ENDED, "Раунд завершен"],
-  [GameState.WAITING, "Раунд еще не начался"],
-]);
 
 export default function GamesPage() {
   const games = useLoaderData<Game[]>();
