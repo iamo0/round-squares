@@ -21,6 +21,10 @@ const router = createBrowserRouter([
     path: "/login",
     element: <LoginPage />,
   },
+  {
+    path: "/404",
+    element: <>Игра не найдена</>
+  }
 ]);
 
 createRoot(document.getElementById('root')!).render(

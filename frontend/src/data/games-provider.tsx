@@ -37,3 +37,8 @@ export default function GamesProvider({ children }: PropsWithChildren) {
 export function useGames() {
   return useContext(GamesContext)
 }
+
+export function useGame(gameId: string) {
+  const games = useContext(GamesContext);
+  return games.find(({ id }) => id === gameId) || null;
+}
