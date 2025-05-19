@@ -1,4 +1,3 @@
-import { createContext, useContext, type PropsWithChildren } from "react";
 import { GameState, type Game } from "../types/game";
 import getRandom from "../helpers/get-random";
 
@@ -6,7 +5,7 @@ const DURATION = 1000 * 60;
 
 const COOLDOWN = 1000 * 60;
 
-const initialGames: Array<Game> = new Array(5)
+export const initialGames: Array<Game> = new Array(5)
   .fill(null)
   .map((_item, i: number) => {
     const now = Date.now();
@@ -25,20 +24,3 @@ const initialGames: Array<Game> = new Array(5)
     };
   })
   .sort((a, b) => +a.start - +b.start);
-
-const GamesContext = createContext<Game[]>([]);
-
-export default function GamesProvider({ children }: PropsWithChildren) {
-  return <GamesContext.Provider value={initialGames}>
-    {children}
-  </GamesContext.Provider>
-};
-
-export function useGames() {
-  return useContext(GamesContext)
-}
-
-export function useGame(gameId: string) {
-  const games = useContext(GamesContext);
-  return games.find(({ id }) => id === gameId) || null;
-}

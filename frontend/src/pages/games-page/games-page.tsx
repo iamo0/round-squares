@@ -1,6 +1,5 @@
-import { NavLink } from "react-router-dom";
-import { GameState } from "../../types/game";
-import { useGames } from "../../data/games-provider";
+import { NavLink, useLoaderData } from "react-router-dom";
+import { GameState, type Game } from "../../types/game";
 
 const GameStateName = new Map([
   [GameState.ACTIVE, "Активен"],
@@ -10,7 +9,7 @@ const GameStateName = new Map([
 ]);
 
 export default function GamesPage() {
-  const games = useGames();
+  const games = useLoaderData<Game[]>();
 
   return <section className="games">
     {games.map((g) => <article className="games-item" key={`game-${g.id}`}>
