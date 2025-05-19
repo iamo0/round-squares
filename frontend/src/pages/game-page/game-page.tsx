@@ -1,13 +1,17 @@
 import { NavLink, useLoaderData } from "react-router-dom";
 import { useState } from "react";
+import calculatePoints from "../../helpers/calculate-points";
+import type { Click } from "../../types/click";
 
 export default function GamePage() {
   const game = useLoaderData();
 
-  const [clicks, setClicks] = useState(0);
+  const [clicks, setClicks] = useState<Click[]>([]);
 
   function handleDuckClick() {
-    setClicks(clicks + 1);
+    setClicks([...clicks, {
+      date: Date.now(),
+    }]);
   }
 
   return <>
@@ -25,7 +29,7 @@ export default function GamePage() {
       <div className="game-round-stats">
         <div className="game-round-stats-state">{game.state}</div>
         <div className="game-round-stats-timer">00:00</div>
-        <div className="game-round-stats-points">{clicks}</div>
+        <div className="game-round-stats-points">{calculatePoints(clicks)}</div>
       </div>
     </main>
   </>;
