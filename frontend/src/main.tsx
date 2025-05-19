@@ -6,7 +6,7 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
-import { initialGames } from './data/games-provider';
+import { initialGames } from './data/initial-games';
 
 const router = createBrowserRouter([
   {
