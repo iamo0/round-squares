@@ -2,9 +2,10 @@ import { NavLink, useLoaderData } from "react-router-dom";
 import { useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
 import type { Click } from "../../types/click";
+import type { Game } from "../../types/game";
 
 export default function GamePage() {
-  const game = useLoaderData();
+  const game = useLoaderData<Game>();
 
   const [clicks, setClicks] = useState<Click[]>([]);
 

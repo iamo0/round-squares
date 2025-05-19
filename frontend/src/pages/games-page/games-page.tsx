@@ -1,5 +1,6 @@
 import { NavLink, useLoaderData } from "react-router-dom";
 import { GameState, type Game } from "../../types/game";
+import { getGameState } from "../../data/initial-games";
 
 const GameStateName = new Map([
   [GameState.ACTIVE, "Активен"],
@@ -19,7 +20,7 @@ export default function GamesPage() {
           <div className="games-item-timeframe-start">{g.start.toISOString()}</div>
           <div className="games-item-timeframe-end">{g.end.toISOString()}</div>
         </div>
-        <div className="games-item-state">Статус: {GameStateName.get(g.state)}</div>
+        <div className="games-item-state">Статус: {GameStateName.get(getGameState(g))}</div>
       </NavLink>
     </article>)}
   </section >;
