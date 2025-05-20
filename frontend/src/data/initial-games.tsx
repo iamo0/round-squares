@@ -20,11 +20,14 @@ export const initialGames: Array<Game> = new Array(5)
 
 export function getGameState(game: Game) {
   const now = Date.now();
+  const gameStart = +game.start;
+  const gameCooldown = getGameCooldownTimestamp(game);
+  const gameEnd = getGameEndTimestamp(game);
 
   return (
-    (now >= +game.start + DURATION + COOLDOWN ? GameState.ENDED : null) ||
-    (now > +game.start && now < +game.start + COOLDOWN ? GameState.COOLDOWN : null) ||
-    (now >= +game.start + COOLDOWN && now < +game.start + DURATION + COOLDOWN ? GameState.ACTIVE : null) ||
+    (now >= gameStart && now < gameCooldown   ? GameState.COOLDOWN : null) ||
+    (now >= gameCooldown && now < gameEnd     ? GameState.ACTIVE   : null) ||
+    (now >= gameEnd                           ? GameState.ENDED    : null) ||
     GameState.WAITING
   );
 }
