@@ -16,7 +16,7 @@ export const initialGames: Array<Game> = new Array(5)
       start: new Date(start),
     };
   })
-  .sort((a, b) => +a.start - +b.start);
+  .sort((a, b) => +b.start - +a.start);
 
 export function getGameState(game: Game) {
   const now = Date.now();
