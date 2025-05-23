@@ -95,6 +95,7 @@ const router = createBrowserRouter([
       return responseData;
     },
     HydrateFallback: Loader,
+    shouldRevalidate: () => true,
   },
   {
     path: "/login",

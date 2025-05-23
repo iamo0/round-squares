@@ -1,0 +1,125 @@
+.games {
+  align-items: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+  margin: 0 auto;
+  padding: 2em;
+  width: var(--screen-size-min);
+}
+
+.games-item {
+  border: solid 1px var(--accent-color-dim);
+  box-sizing: border-box;
+  padding: 1em;
+  width: 100%;
+}
+
+.games-item:hover {
+  box-shadow: 0 0 3px var(--accent-color-dim);
+}
+
+.games-item-e {
+  opacity: 0.6;
+}
+
+.games-item-w:hover,
+.games-item-e:hover {
+  box-shadow: none;
+}
+
+.games-item-w a:hover,
+.games-item-e a:hover {
+  color: var(--text-color);
+  cursor: default;
+}
+
+.games-item-id {
+  margin: 0 0 0.5em;
+  text-align: center;
+}
+
+.games-item-state::before {
+  content: "⦿";
+  margin-right: 0.5em;
+}
+
+.games-item-timeframe {
+  border-top: solid 1px currentColor;
+  margin-top: 0.5em;
+  padding-top: 0.5em;
+}
+
+.games-item-w .games-item-state::before {
+  color: #666;
+}
+
+.games-item-a .games-item-state::before,
+.games-item-cd .games-item-state::before {
+  color: #07e93c;
+  opacity: 1;
+}
+
+.games-item-cd .games-item-state::before {
+  animation: fade;
+  animation-direction: alternate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.games-item-e .games-item-state::before {
+  color: red;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.newgame {
+  background: var(--background-color);
+  border: 0;
+  box-shadow: 0 0 20px var(--accent-color-dim);
+  box-sizing: border-box;
+  padding: 1em;
+  position: fixed;
+  width: var(--screen-size-min);
+  z-index: 1;
+}
+
+.newgame-close {
+  border: 0;
+  font-size: 0;
+  position: absolute;
+  top: 0.5rem;
+  right: 1rem;
+}
+
+.newgame-close:hover {
+  border: 0;
+  box-shadow: none;
+}
+
+.newgame-close::before {
+  content: "⨉";
+  font-size: calc(var(--base-font-size) * 1.5);
+  font-weight: 900;
+}
+
+.newgame-title {
+  color: var(--text-color);
+  margin: 0.5em 0 1em;
+  text-align: center;
+}
+
+.newgame-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}

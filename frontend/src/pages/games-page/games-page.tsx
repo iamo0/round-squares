@@ -1,5 +1,7 @@
+import "./games-page.css";
+
 import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
-import { GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
+import { GameState, GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
 import { useState } from "react";
 
 export default function GamesPage() {
@@ -9,27 +11,31 @@ export default function GamesPage() {
   const [isDialogShown, setIsDialogShown] = useState(false);
 
   return <section className="games">
-    <dialog open={isDialogShown}>
+    <dialog open={isDialogShown} className="newgame">
       <fetcher.Form method="POST" onSubmit={() => setIsDialogShown(false)}>
-        <button type="button" onClick={() => setIsDialogShown(false)}>Закрыть</button>
-        <h2>Начать новый раунд</h2>
-        <button type="submit" name="when" value="now">Прямо сейчас</button>
-        <button type="submit" name="when" value="fiv">Через пять минут</button>
+        <button className="newgame-close" type="button" onClick={() => setIsDialogShown(false)}>Закрыть</button>
+        <h2 className="newgame-title">Начать новый раунд</h2>
+        <div className="newgame-controls">
+          <button type="submit" name="when" value="now">Прямо сейчас</button>
+          <button type="submit" name="when" value="fiv">Через пять минут</button>
+        </div>
       </fetcher.Form>
     </dialog>
 
-    <button type="button" style={{
-      zoom: 1.5,
-    }} onClick={() => setIsDialogShown(true)}>Создать раунд</button>
+    <button type="button" id="button" onClick={() => setIsDialogShown(true)}>Создать раунд</button>
 
-    {games.map((g) => <article className="games-item" key={`game-${g.id}`}>
-      <NavLink to={`/${g.id}`}>
-        <h2 className="games-item-id">{g.id}</h2>
+    {games.map((g) => <article className={`games-item games-item-${getGameState(g)}`} key={`game-${g.id}`}>
+      <NavLink to={`/${g.id}`} onClick={(evt) => {
+        if ([GameState.WAITING, GameState.ENDED].includes(getGameState(g))) {
+          evt.preventDefault();
+        }
+      }}>
+        <h2 className="games-item-id">Раунд #{g.id}</h2>
+        <div className="games-item-state">{GameStateName.get(getGameState(g))}</div>
         <div className="games-item-timeframe">
-          <div className="games-item-timeframe-start">{new Date(getGameCooldownTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
-          <div className="games-item-timeframe-end">{new Date(getGameEndTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
+          <div className="games-item-timeframe-start">Начало:&nbsp;{new Date(getGameCooldownTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
+          <div className="games-item-timeframe-end">Конец:&nbsp;{new Date(getGameEndTimestamp(g)).toLocaleTimeString("ru-RU")}</div>
         </div>
-        <div className="games-item-state">Статус: {GameStateName.get(getGameState(g))}</div>
       </NavLink>
     </article>)}
   </section >;

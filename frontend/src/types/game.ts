@@ -17,7 +17,7 @@ export type RawGameResponse = {
 
 export const GameStateName = new Map([
   [GameState.ACTIVE, "Активен"],
-  [GameState.COOLDOWN, "Cooldown"],
+  [GameState.COOLDOWN, "Начинается"],
   [GameState.ENDED, "Раунд завершен"],
   [GameState.WAITING, "Раунд еще не начался"],
 ]);

@@ -1,0 +1,57 @@
+:root {
+  --background-color: #222;
+
+  --base-font-family: monospace;
+  --base-font-size: 20px;
+
+  --accent-color: rgba(57, 186, 136, 1);
+  --accent-color-dim: rgba(57, 186, 136, 0.3);
+
+  --text-color: rgb(57, 186, 136);
+  --text-color-hovered: hsl(157, 53%, 70%);
+
+  --screen-size-min: 350px;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: var(--base-font-family);
+  font-size: var(--base-font-size);
+}
+
+:link,
+:visited {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+:link:hover {
+  color: var(--text-color-hovered);
+}
+
+button {
+  background: transparent;
+  border: solid 1px var(--text-color);
+  border-radius: 5px;
+  color: var(--text-color);
+  font-family: var(--base-font-family);
+  font-size: var(--base-font-size);
+  font-weight: 900;
+  padding: 0.5em 1em;
+}
+
+button:hover {
+  border-color: var(--text-color-hovered);
+  box-shadow: 0 0 5px var(--text-color-hovered);
+}
+
+button:active {
+  transform: translateY(1px);
+}
