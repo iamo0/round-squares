@@ -1,0 +1,91 @@
+.game {
+  box-sizing: border-box;
+  margin: 2em auto;
+  width: var(--screen-size-min);
+}
+
+.game-header {
+  align-items: center;
+  display: flex;
+  gap: 1em;
+  justify-content: space-between;
+  margin: 1em 0;
+}
+
+.game-header-exit {
+  font-size: 80%;
+}
+
+.game-header-status {
+  flex-grow: 1;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.game-header-status::before {
+  content: "⦿";
+  margin-right: 0.5em;
+}
+
+.game-header-status-w::before {
+  color: #666;
+}
+
+.game-header-status-a::before,
+.game-header-status-cd::before {
+  color: #07e93c;
+  opacity: 1;
+}
+
+.game-header-status-cd::before {
+  animation: fade;
+  animation-direction: alternate;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}
+
+.game-header-status-e::before {
+  color: red;
+}
+
+@keyframes fade {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.game-round-clicker {
+  border: 0;
+  font-size: 0;
+  margin: 0.5em 0;
+  opacity: 0.8;
+  width: 100%;
+}
+
+.game-round-clicker:hover {
+  box-shadow: none;
+}
+
+.game-round-clicker:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.game-round-clicker::after {
+  content: url("/goose.svg");
+}
+
+.game-round-stats-points {
+  font-size: 150%;
+  font-weight: bold;
+  text-align: center;
+}
+
+.game-round-stats-timer {
+  text-align: center;
+}
+
+

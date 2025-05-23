@@ -1,3 +1,5 @@
+import "./game-page.css";
+
 import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
@@ -63,30 +65,29 @@ export default function GamePage() {
   }
 
   return <>
-    <header className="game-header">
+    <main className="game">
       <NavLink to="/" className="game-header-exit">Выйти</NavLink>
-      <div className="game-header-status" title={game.id}>
-        {GameStateName.get(gameState)}
-      </div>
-      <div className="game-header-username">%username%</div>
-    </header>
-    <main className="game-round">
-      <button
-        disabled={[GameState.WAITING, GameState.COOLDOWN, GameState.ENDED].includes(gameState)}
-        onClick={handleDuckClick}
-        className="game-round-clicker"
-        style={{
-          zoom: 3,
-        }}
-      >Click me!</button>
-      <div className="game-round-stats">
-        <div className="game-round-stats-state">{GameStateName.get(gameState)}</div>
-        <div className="game-round-stats-timer" hidden={[GameState.ENDED].includes(gameState)}>{
-          (GameState.ACTIVE === gameState ? "До конца раунда " : null) ||
-          ("До начала раунда")
-        }{timeLeft}</div>
-        <div className="game-round-stats-points">{calculatePoints(clicks)}</div>
-      </div>
+      <header className="game-header">
+        <div className={`game-header-status game-header-status-${gameState}`} title={game.id}>
+          {GameStateName.get(gameState)}
+        </div>
+        <div className="game-header-username">%username%</div>
+      </header>
+      <section className="game-round">
+        <button
+          disabled={[GameState.WAITING, GameState.COOLDOWN, GameState.ENDED].includes(gameState)}
+          onClick={handleDuckClick}
+          className="game-round-clicker"
+        >Click me!</button>
+        <div className="game-round-stats">
+          <div className="game-round-stats-points">Очки: {calculatePoints(clicks)}</div>
+          <div className="game-round-stats-timer">{
+            (GameState.COOLDOWN === gameState ? "Начинаем через " : null) ||
+            (GameState.ACTIVE === gameState ?   "До конца раунда "  : null) ||
+            "Раунд завершен"
+          }{[GameState.ACTIVE, GameState.COOLDOWN].includes(gameState) ? `00:${Math.round(timeLeft/1000) < 10 ? `0${Math.round(timeLeft/1000)}` : Math.round(timeLeft/1000)}` : null}</div>
+        </div>
+      </section>
     </main>
   </>;
 }

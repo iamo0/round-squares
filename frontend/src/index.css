@@ -1,10 +1,10 @@
 :root {
   --background-color: #222;
 
-  --base-font-family: monospace;
+  --base-font-family: "Courier New", monospace;
   --base-font-size: 20px;
 
-  --accent-color: rgba(57, 186, 136, 1);
+  --accent-color: rgb(57, 186, 136);
   --accent-color-dim: rgba(57, 186, 136, 0.3);
 
   --text-color: rgb(57, 186, 136);
@@ -54,4 +54,17 @@ button:hover {
 
 button:active {
   transform: translateY(1px);
+}
+
+button:disabled {
+  opacity: 0.6;
+}
+
+button:hover:disabled {
+  border-color: var(--text-color);
+  box-shadow: none;
+}
+
+button:active:disabled {
+  transform: none;
 }
