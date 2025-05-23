@@ -10,7 +10,7 @@ export default function GamesPage() {
 
   return <section className="games">
     <dialog open={isDialogShown}>
-      <fetcher.Form method="POST">
+      <fetcher.Form method="POST" onSubmit={() => setIsDialogShown(false)}>
         <button type="button" onClick={() => setIsDialogShown(false)}>Закрыть</button>
         <h2>Начать новый раунд</h2>
         <button type="submit" name="when" value="now">Прямо сейчас</button>
