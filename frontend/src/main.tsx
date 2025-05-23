@@ -6,14 +6,32 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
-import { initialGames } from './data/initial-games';
+import type { Game } from './types/game';
+
+type RawGameResponse = {
+  id: "string",
+  start: "string",
+};
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <GamesPage />,
     loader: async function() {
-      return initialGames;
+      const gamesResponse = await fetch(`http://localhost:50053/games`, {
+        method: "GET",
+      });
+
+      if (gamesResponse.status !== 200) {
+        throw new Error("");
+      }
+
+      const gamesList = (await gamesResponse.json()).map((g: RawGameResponse) => ({
+        ...g,
+        start: new Date(g.start),
+      })) as Game[];
+
+      return gamesList;
     }
   },
   {
@@ -21,13 +39,20 @@ const router = createBrowserRouter([
     element: <GamePage />,
     loader: async function({ params }) {
       const { gameId } = params;
-      const gameToDisplay = initialGames.find((g) => g.id === gameId);
+      const gameResponse = await fetch(`http://localhost:50053/games/${gameId}`, {
+        method: "GET",
+      });
 
-      if (gameToDisplay === undefined) {
+      if (gameResponse.status !== 200) {
         return redirect("/404");
       }
 
-      return gameToDisplay;
+      const gameToDisplay = await gameResponse.json();
+
+      return {
+        ...gameToDisplay,
+        start: new Date(gameToDisplay.start),
+      } as Game;
     },
   },
   {
