@@ -1,4 +1,4 @@
-import { NavLink, useLoaderData } from "react-router-dom";
+import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
 import type { Click } from "../../types/click";
@@ -6,6 +6,7 @@ import { GameState, GameStateName, getGameCooldownTimestamp, getGameEndTimestamp
 
 export default function GamePage() {
   const game = useLoaderData<Game>();
+  const fetcher = useFetcher();
 
   const [clicks, setClicks] = useState<Click[]>([]);
   const [timeLeft, setTimeLeft] = useState(-1);
@@ -39,6 +40,17 @@ export default function GamePage() {
     updateTimestamp();
     return cleanup;
   }, []);
+
+  useEffect(function () {
+    if (gameState !== GameState.ENDED) {
+      return;
+    }
+
+    fetcher.submit(clicks, {
+      method: "post",
+      encType: "application/json",
+    });
+  }, [gameState]);
 
   function handleDuckClick() {
     if (getGameState(game) !== GameState.ACTIVE) {

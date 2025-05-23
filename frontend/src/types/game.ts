@@ -22,9 +22,9 @@ export const GameStateName = new Map([
   [GameState.WAITING, "Раунд еще не начался"],
 ]);
 
-const DURATION = 1000 * 60;
+const DURATION = 1000 * 5;
 
-const COOLDOWN = 1000 * 60;
+const COOLDOWN = 1000 * 5;
 
 export function getGameState(game: Game) {
   const now = Date.now();

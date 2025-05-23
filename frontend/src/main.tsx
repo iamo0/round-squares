@@ -75,6 +75,25 @@ const router = createBrowserRouter([
         start: new Date(gameToDisplay.start),
       } as Game;
     },
+    action: async function({ request, params }) {
+      const { gameId } = params;
+      const clicks = await request.json();
+
+      const clicksResponse = await fetch(`http://localhost:50053/games/${gameId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ clicks }),
+      });
+
+      if (clicksResponse.status !== 200) {
+        throw new Error("");
+      }
+
+      const responseData = await clicksResponse.json();
+      return responseData;
+    },
     HydrateFallback: Loader,
   },
   {
