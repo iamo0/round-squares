@@ -8,7 +8,7 @@ const initialGames = new Array(5)
     const start = now + (Math.random() > 0.5 ? -1 : 1) * getRandom(0, 1000 * 60 * 5);
 
     return {
-      id: i.toString(),
+      id: (i + 1).toString(),
       start: new Date(start),
     };
   })
@@ -24,6 +24,22 @@ export default function initializeGameRouter(_sequelize?: any) {
 
   gamesRouter.post("/", async function (req: Request, res: Response) {
 
+  });
+
+  gamesRouter.get("/:gameId", async function (req: Request, res: Response) {
+    const { gameId } = req.params;
+    const game = initialGames.find((g) => g.id === gameId);
+
+    if (game === undefined) {
+      res.status(404).json({
+        errors: [{
+          message: `Can't find a game with id ${req.params.gameId}`,
+        }]
+      });
+      return;
+    }
+
+    res.status(200).json(game);
   });
 
   return gamesRouter;
