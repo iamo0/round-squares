@@ -1,6 +1,5 @@
 import { NavLink, useLoaderData } from "react-router-dom";
-import { GameStateName, type Game } from "../../types/game";
-import { getGameCooldownTimestamp, getGameEndTimestamp, getGameState } from "../../data/initial-games";
+import { GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
 
 export default function GamesPage() {
   const games = useLoaderData<Game[]>();

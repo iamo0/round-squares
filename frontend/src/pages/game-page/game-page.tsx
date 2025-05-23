@@ -2,8 +2,7 @@ import { NavLink, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calculatePoints from "../../helpers/calculate-points";
 import type { Click } from "../../types/click";
-import { GameState, GameStateName, type Game } from "../../types/game";
-import { getGameCooldownTimestamp, getGameEndTimestamp, getGameState } from "../../data/initial-games";
+import { GameState, GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
 
 export default function GamePage() {
   const game = useLoaderData<Game>();
