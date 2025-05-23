@@ -10,6 +10,11 @@ export type Game = {
   start: Date,
 }
 
+export type RawGameResponse = {
+  id: "string",
+  start: "string",
+}
+
 export const GameStateName = new Map([
   [GameState.ACTIVE, "Активен"],
   [GameState.COOLDOWN, "Cooldown"],

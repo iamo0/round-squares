@@ -6,12 +6,11 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
-import type { Game } from './types/game';
+import type { Game, RawGameResponse } from './types/game';
 
-type RawGameResponse = {
-  id: "string",
-  start: "string",
-};
+function Loader() {
+  return <div style={{ textAlign: "center" }}>Loading...</div>;
+}
 
 const router = createBrowserRouter([
   {
@@ -32,7 +31,29 @@ const router = createBrowserRouter([
       })) as Game[];
 
       return gamesList;
-    }
+    },
+    action: async function({ request }) {
+      const formData = await request.formData();
+      const date = formData.get("when")! as string === "now"
+        ? Date.now()
+        : Date.now() + 1000 * 60 * 5;
+
+      const newGameResponse = await fetch(`http://localhost:50053/games`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ date }),
+      });
+
+      if (newGameResponse.status !== 201) {
+        throw new Error("");
+      }
+
+      return (await newGameResponse.json());
+    },
+    HydrateFallback: Loader,
+    shouldRevalidate: () => true,
   },
   {
     path: "/:gameId",
@@ -54,6 +75,7 @@ const router = createBrowserRouter([
         start: new Date(gameToDisplay.start),
       } as Game;
     },
+    HydrateFallback: Loader,
   },
   {
     path: "/login",
