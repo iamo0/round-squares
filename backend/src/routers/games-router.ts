@@ -1,7 +1,7 @@
 import { Request, Response, Router } from "express";
 import getRandom from "../helpers/get-random";
 
-const initialGames = new Array(5)
+const games = new Array(5)
   .fill(null)
   .map((_item, i: number) => {
     const now = Date.now();
@@ -11,24 +11,23 @@ const initialGames = new Array(5)
       id: (i + 1).toString(),
       start: new Date(start),
     };
-  })
-  .sort((a, b) => +b.start - +a.start);
+  });
 
 
 export default function initializeGameRouter(_sequelize?: any) {
   const gamesRouter = Router();
 
   gamesRouter.get("/", async function (req: Request, res: Response) {
-    res.status(200).json(initialGames);
+    res.status(200).json(games.sort((a, b) => +b.start - +a.start));
   });
 
   gamesRouter.post("/", async function (req: Request, res: Response) {
-
+    
   });
 
   gamesRouter.get("/:gameId", async function (req: Request, res: Response) {
     const { gameId } = req.params;
-    const game = initialGames.find((g) => g.id === gameId);
+    const game = games.find((g) => g.id === gameId);
 
     if (game === undefined) {
       res.status(404).json({
