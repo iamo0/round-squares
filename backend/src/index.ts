@@ -8,6 +8,7 @@ const PORT = 50053; // ^_^
 const sequelize = {};
 
 server.use(cors());
+server.use(express.json());
 
 server.use("/games", initializeGameRouter(sequelize));
 

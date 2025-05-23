@@ -1,10 +1,7 @@
-import { Request, Response, Router } from "express";
+import express, { Request, Response, Router } from "express";
 import getRandom from "../helpers/get-random";
 
-function getNewGame(i: number) {
-  const now = Date.now();
-  const start = now + (Math.random() > 0.5 ? -1 : 1) * getRandom(0, 1000 * 60 * 5);
-
+function getNewGame(i: number, start: number) {
   return {
     id: (i + 1).toString(),
     start: new Date(start),
@@ -13,10 +10,15 @@ function getNewGame(i: number) {
 
 const games = new Array(5)
   .fill(null)
-  .map((_item, i: number) => getNewGame(i));
+  .map((_item, i: number) => {
+    const now = Date.now();
+    const start = now + (Math.random() > 0.5 ? -1 : 1) * getRandom(0, 1000 * 60 * 5);
+
+    return getNewGame(i, start);
+  });
 
 
-export default function initializeGameRouter(_sequelize?: any) {
+export default function initializeGameRouter(_sequelize: any) {
   const gamesRouter = Router();
 
   gamesRouter.get("/", async function (req: Request, res: Response) {
@@ -24,7 +26,8 @@ export default function initializeGameRouter(_sequelize?: any) {
   });
 
   gamesRouter.post("/", async function (req: Request, res: Response) {
-    const newGame = getNewGame(games.length);
+    const newGameStart = req.body.date;
+    const newGame = getNewGame(games.length, newGameStart);
     games.push(newGame);
     res.status(201).json(newGame);
   });
