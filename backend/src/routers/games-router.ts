@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import getRandom from "../helpers/get-random";
 
 function getNewGame(i: number, start: number) {
