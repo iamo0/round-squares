@@ -1,10 +1,13 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import initializeGameRouter from "./routers/games-router";
 
 const server = express();
 const PORT = 50053; // ^_^
 
 const sequelize = {};
+
+server.use(cors());
 
 server.use("/games", initializeGameRouter(sequelize));
 
