@@ -2,17 +2,26 @@ import "./game-page.css";
 
 import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
-import calculatePoints from "../../helpers/calculate-points";
-import type { Click } from "../../types/click";
-import { GameState, GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
+import calculatePoints, {
+  GameState,
+  GameStateName,
+  getGameCooldownTimestamp,
+  getGameEndTimestamp,
+  getGameState,
+  type Game,
+  type Click,
+} from "@round-square/shared";
 
 export default function GamePage() {
+  console.log("WOO HOO");
+  console.log(getGameState);
+
   const game = useLoaderData<Game>();
   const fetcher = useFetcher();
 
   const [clicks, setClicks] = useState<Click[]>([]);
   const [timeLeft, setTimeLeft] = useState(-1);
-  const [timer, setTimer] = useState<number | undefined>(undefined);
+  const [timer, setTimer] = useState<NodeJS.Timeout | undefined>(undefined);
   const [gameState, setGameState] = useState(getGameState(game));
 
   function cleanup() {
@@ -83,9 +92,9 @@ export default function GamePage() {
           <div className="game-round-stats-points">Очки: {calculatePoints(clicks)}</div>
           <div className="game-round-stats-timer">{
             (GameState.COOLDOWN === gameState ? "Начинаем через " : null) ||
-            (GameState.ACTIVE === gameState ?   "До конца раунда "  : null) ||
+            (GameState.ACTIVE === gameState ? "До конца раунда " : null) ||
             "Раунд завершен"
-          }{[GameState.ACTIVE, GameState.COOLDOWN].includes(gameState) ? `00:${Math.round(timeLeft/1000) < 10 ? `0${Math.round(timeLeft/1000)}` : Math.round(timeLeft/1000)}` : null}</div>
+          }{[GameState.ACTIVE, GameState.COOLDOWN].includes(gameState) ? `00:${Math.round(timeLeft / 1000) < 10 ? `0${Math.round(timeLeft / 1000)}` : Math.round(timeLeft / 1000)}` : null}</div>
         </div>
       </section>
     </main>

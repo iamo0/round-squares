@@ -1,7 +1,14 @@
 import "./games-page.css";
 
 import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
-import { GameState, GameStateName, getGameCooldownTimestamp, getGameEndTimestamp, getGameState, type Game } from "../../types/game";
+import {
+  type Game,
+  GameState,
+  GameStateName,
+  getGameState,
+  getGameCooldownTimestamp,
+  getGameEndTimestamp,
+} from "@round-square/shared";
 import { useState } from "react";
 
 export default function GamesPage() {

@@ -6,7 +6,12 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
-import type { Game, RawGameResponse } from './types/game';
+import type { Game } from '@round-square/shared';
+
+type RawGameResponse = {
+  id: "string",
+  start: "string",
+}
 
 function Loader() {
   return <div style={{ textAlign: "center" }}>Loading...</div>;

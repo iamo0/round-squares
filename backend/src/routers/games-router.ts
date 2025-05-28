@@ -1,18 +1,15 @@
 import { Request, Response, Router } from "express";
 import getRandom from "../helpers/get-random";
+import calculatePoints, {
+  type Click,
+  type Game,
+} from "@round-square/shared";
 
-function getNewGame(i: number, start: number):{
-  id: string,
-  start: Date,
-  clicks: {
-    user?: string,
-    date: Date
-  }[],
-} {
+function getNewGame(i: number, start: number): Game & { clicks: Click[] } {
   return {
     id: (i + 1).toString(),
     start: new Date(start),
-    clicks: [],
+    clicks: [] as Click[],
   };
 }
 
@@ -81,13 +78,15 @@ export default function initializeGameRouter(_sequelize: any) {
       clicks: { date: string }[]
     } = req.body;
 
-    game.clicks = [...game.clicks, ...clicks.map(({ date }) => ({
-      date: new Date(date),
+    game.clicks = [...game.clicks, ...clicks.map(({ date }):Click => ({
+      date: +new Date(date),
     }))];
 
     res
       .status(200)
-      .json(game.clicks);
+      .json({
+        points: calculatePoints(game.clicks),
+      });
   });
 
   return gamesRouter;
