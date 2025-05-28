@@ -13,9 +13,6 @@ import calculatePoints, {
 } from "@round-square/shared";
 
 export default function GamePage() {
-  console.log("WOO HOO");
-  console.log(getGameState);
-
   const game = useLoaderData<Game>();
   const fetcher = useFetcher();
 
