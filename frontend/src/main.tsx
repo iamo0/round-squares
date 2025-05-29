@@ -5,10 +5,11 @@ import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, redirect, RouterProvider, type LoaderFunctionArgs } from 'react-router-dom';
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
+import WithAdminGamesPage from './pages/games-page/with-admin-games-page';
 import LoginPage from './pages/login-page/login-page';
 import { GameState, getGameState, type Game } from '@round-square/shared';
 import GameResultPage from './pages/game-result-page/game-result-page';
-import { getCookie, setCookie } from 'typescript-cookie';
+import { getCookie, removeCookie, setCookie } from 'typescript-cookie';
 
 const AUTH_COOKIE_NAME = "session_id";
 
@@ -19,6 +20,13 @@ type RawGameResponse = {
 
 function Loader() {
   return <div style={{ textAlign: "center" }}>Loading...</div>;
+}
+
+export function isAdmin() {
+  const username = getCookie(AUTH_COOKIE_NAME);
+  return username !== undefined
+    ? username.toLowerCase().includes("admin")
+    : false
 }
 
 function checkAuth() {
@@ -48,7 +56,9 @@ function getProtectedLoader(
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <GamesPage />,
+    element: isAdmin()
+      ? <WithAdminGamesPage />
+      : <GamesPage />,
     loader: getProtectedLoader(checkAuth, async function gamesLoader() {
       const gamesResponse = await fetch(`http://localhost:50053/games`, {
         method: "GET",
@@ -67,6 +77,13 @@ const router = createBrowserRouter([
     }),
     action: async function gamesAction({ request }) {
       const formData = await request.formData();
+      const isLogoutRequest = formData.get("logout") !== null;
+
+      if (isLogoutRequest) {
+        removeCookie(AUTH_COOKIE_NAME);
+        return redirect("/");
+      }
+
       const date = formData.get("when")! as string === "now"
         ? Date.now()
         : Date.now() + 1000 * 60 * 5;
