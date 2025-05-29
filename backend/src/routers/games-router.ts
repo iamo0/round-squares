@@ -1,6 +1,8 @@
 import { Request, Response, Router } from "express";
 import getRandom from "../helpers/get-random";
 import calculatePoints, {
+  GameState,
+  getGameState,
   type Click,
   type Game,
 } from "@round-square/shared";
@@ -25,7 +27,7 @@ const games = new Array(5)
 export default function initializeGameRouter(_sequelize: any) {
   const gamesRouter = Router();
 
-  gamesRouter.get("/", async function (req: Request, res: Response) {
+  gamesRouter.get("/", async function getGames(req: Request, res: Response) {
     res
       .status(200)
       .json(
@@ -35,7 +37,7 @@ export default function initializeGameRouter(_sequelize: any) {
       );
   });
 
-  gamesRouter.post("/", async function (req: Request, res: Response) {
+  gamesRouter.post("/", async function createGame(req: Request, res: Response) {
     const newGameStart = req.body.date;
     const newGame = getNewGame(games.length, newGameStart);
     games.push(newGame);
@@ -44,7 +46,7 @@ export default function initializeGameRouter(_sequelize: any) {
     res.status(201).json({ id, start });
   });
 
-  gamesRouter.get("/:gameId", async function (req: Request, res: Response) {
+  gamesRouter.get("/:gameId", async function getGame(req: Request, res: Response) {
     const { gameId } = req.params;
     const game = games.find((g) => g.id === gameId);
 
@@ -61,7 +63,7 @@ export default function initializeGameRouter(_sequelize: any) {
     res.status(200).json({ id, start });
   });
 
-  gamesRouter.post("/:gameId", async function (req: Request, res: Response) {
+  gamesRouter.post("/:gameId", async function saveGave(req: Request, res: Response) {
     const { gameId } = req.params;
     const game = games.find((g) => g.id === gameId);
 
@@ -78,15 +80,42 @@ export default function initializeGameRouter(_sequelize: any) {
       clicks: { date: string }[]
     } = req.body;
 
-    game.clicks = [...game.clicks, ...clicks.map(({ date }):Click => ({
+    game.clicks = [...game.clicks, ...clicks.map(({ date }): Click => ({
       date: +new Date(date),
     }))];
 
     res
-      .status(200)
+      .status(201)
       .json({
         points: calculatePoints(game.clicks),
       });
+  });
+
+  gamesRouter.get("/:gameId/stats", async function getGame(req: Request, res: Response) {
+    const { gameId } = req.params;
+    const game = games.find((g) => g.id === gameId);
+
+    if (game === undefined) {
+      res.status(404).json({
+        errors: [{
+          message: `Can't find a game with id ${req.params.gameId}`,
+        }],
+      });
+      return;
+    }
+
+    if (getGameState(game) !== GameState.ENDED) {
+      res.status(400).json({
+        errors: [{
+          message: "Unable to return points for unfinished game",
+        }],
+      })
+      return;
+    }
+
+    res.status(200).json({ 
+      points: calculatePoints(game.clicks),
+    });
   });
 
   return gamesRouter;
