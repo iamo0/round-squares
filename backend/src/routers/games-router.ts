@@ -91,7 +91,7 @@ export default function initializeGameRouter(_sequelize: any) {
       });
   });
 
-  gamesRouter.get("/:gameId/stats", async function getGame(req: Request, res: Response) {
+  gamesRouter.get("/:gameId/stats", async function getGameStats(req: Request, res: Response) {
     const { gameId } = req.params;
     const game = games.find((g) => g.id === gameId);
 
