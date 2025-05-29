@@ -155,13 +155,21 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    loader: async function loginLoader() {
+      const username = getCookie(AUTH_COOKIE_NAME);
+      if (username !== undefined) {
+        return redirect("/");
+      }
+      return null;
+    },
     action: async function loginAction({ request }) {
       const data = await request.formData();
       setCookie(AUTH_COOKIE_NAME, data.get("login") as string, {
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       });
       return redirect("/");
-    }
+    },
+    HydrateFallback: Loader,
   },
   {
     path: "/404",
