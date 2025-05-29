@@ -1,0 +1,14 @@
+.game-result {
+  margin: 0 auto;
+  width: var(--screen-size-min);
+}
+
+.game-result-exit {
+  border: solid 1px var(--accent-color-dim);
+  border-radius: 5px;
+  display: block;
+  margin: 1em auto;
+  padding: 0.5em;
+  text-align: center;
+  width: 50%;
+}

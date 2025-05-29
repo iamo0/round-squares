@@ -33,7 +33,7 @@ export default function GamesPage() {
 
     {games.map((g) => <article className={`games-item games-item-${getGameState(g)}`} key={`game-${g.id}`}>
       <NavLink to={`/${g.id}`} onClick={(evt) => {
-        if ([GameState.WAITING, GameState.ENDED].includes(getGameState(g))) {
+        if ([GameState.WAITING].includes(getGameState(g))) {
           evt.preventDefault();
         }
       }}>

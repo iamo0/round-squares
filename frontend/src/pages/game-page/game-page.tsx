@@ -1,6 +1,6 @@
 import "./game-page.css";
 
-import { NavLink, useFetcher, useLoaderData } from "react-router-dom";
+import { NavLink, useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import calculatePoints, {
   GameState,
@@ -15,6 +15,7 @@ import calculatePoints, {
 export default function GamePage() {
   const game = useLoaderData<Game>();
   const fetcher = useFetcher();
+  const navigate = useNavigate();
 
   const [clicks, setClicks] = useState<Click[]>([]);
   const [timeLeft, setTimeLeft] = useState(-1);
@@ -54,10 +55,14 @@ export default function GamePage() {
       return;
     }
 
-    fetcher.submit(clicks, {
-      method: "post",
-      encType: "application/json",
-    });
+    (async () => {
+      await fetcher.submit(clicks, {
+        method: "post",
+        encType: "application/json",
+      });
+
+      navigate(`/${game.id}/result`);
+    })();
   }, [gameState]);
 
   function handleDuckClick() {

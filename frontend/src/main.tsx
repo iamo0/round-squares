@@ -6,7 +6,8 @@ import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom'
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
-import type { Game } from '@round-square/shared';
+import { GameState, getGameState, type Game } from '@round-square/shared';
+import GameResultPage from './pages/game-result-page/game-result-page';
 
 type RawGameResponse = {
   id: "string",
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <GamesPage />,
-    loader: async function() {
+    loader: async function gamesLoader() {
       const gamesResponse = await fetch(`http://localhost:50053/games`, {
         method: "GET",
       });
@@ -37,7 +38,7 @@ const router = createBrowserRouter([
 
       return gamesList;
     },
-    action: async function({ request }) {
+    action: async function gamesAction({ request }) {
       const formData = await request.formData();
       const date = formData.get("when")! as string === "now"
         ? Date.now()
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
   {
     path: "/:gameId",
     element: <GamePage />,
-    loader: async function({ params }) {
+    loader: async function gameLoader({ params }) {
       const { gameId } = params;
       const gameResponse = await fetch(`http://localhost:50053/games/${gameId}`, {
         method: "GET",
@@ -74,13 +75,18 @@ const router = createBrowserRouter([
       }
 
       const gameToDisplay = await gameResponse.json();
-
-      return {
+      const game = {
         ...gameToDisplay,
         start: new Date(gameToDisplay.start),
       } as Game;
+
+      if (getGameState(game) === GameState.ENDED) {
+        return redirect(`/${gameId}/result`);
+      }
+
+      return game;
     },
-    action: async function({ request, params }) {
+    action: async function gameAction({ request, params }) {
       const { gameId } = params;
       const clicks = await request.json();
 
@@ -101,6 +107,23 @@ const router = createBrowserRouter([
     },
     HydrateFallback: Loader,
     shouldRevalidate: () => true,
+  },
+  {
+    path: "/:gameId/result",
+    element: <GameResultPage />,
+    loader: async function gameResultLoader({ params }) {
+      const { gameId } = params;
+      const gamePointsResponse = await fetch(`http://localhost:50053/games/${gameId}/stats`, {
+        method: "GET",
+      });
+
+      if (gamePointsResponse.status !== 200) {
+        throw new Error("");
+      }
+
+      return (await gamePointsResponse.json());
+    },
+    HydrateFallback: Loader,
   },
   {
     path: "/login",
