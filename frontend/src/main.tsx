@@ -2,7 +2,7 @@ import './index.css'
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, redirect, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, redirect, RouterProvider, type LoaderFunctionArgs } from 'react-router-dom';
 import GamesPage from './pages/games-page/games-page';
 import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
@@ -18,11 +18,29 @@ function Loader() {
   return <div style={{ textAlign: "center" }}>Loading...</div>;
 }
 
+function checkAuth() {
+  return null;
+}
+
+function getProtectedLoader(
+  checkFunction: (p: LoaderFunctionArgs) => any,
+  loader: (p: LoaderFunctionArgs) => Promise<any>
+) {
+  return async function (p: LoaderFunctionArgs) {
+    const result = checkFunction(p);
+    if (result !== null) {
+      return result;
+    }
+
+    return loader(p);
+  }
+}
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <GamesPage />,
-    loader: async function gamesLoader() {
+    loader: getProtectedLoader(checkAuth, async function gamesLoader() {
       const gamesResponse = await fetch(`http://localhost:50053/games`, {
         method: "GET",
       });
@@ -37,7 +55,7 @@ const router = createBrowserRouter([
       })) as Game[];
 
       return gamesList;
-    },
+    }),
     action: async function gamesAction({ request }) {
       const formData = await request.formData();
       const date = formData.get("when")! as string === "now"
@@ -64,7 +82,7 @@ const router = createBrowserRouter([
   {
     path: "/:gameId",
     element: <GamePage />,
-    loader: async function gameLoader({ params }) {
+    loader: getProtectedLoader(checkAuth, async function gameLoader({ params }) {
       const { gameId } = params;
       const gameResponse = await fetch(`http://localhost:50053/games/${gameId}`, {
         method: "GET",
@@ -85,7 +103,7 @@ const router = createBrowserRouter([
       }
 
       return game;
-    },
+    }),
     action: async function gameAction({ request, params }) {
       const { gameId } = params;
       const clicks = await request.json();
@@ -111,7 +129,7 @@ const router = createBrowserRouter([
   {
     path: "/:gameId/result",
     element: <GameResultPage />,
-    loader: async function gameResultLoader({ params }) {
+    loader: getProtectedLoader(checkAuth, async function gameResultLoader({ params }) {
       const { gameId } = params;
       const gamePointsResponse = await fetch(`http://localhost:50053/games/${gameId}/stats`, {
         method: "GET",
@@ -122,7 +140,7 @@ const router = createBrowserRouter([
       }
 
       return (await gamePointsResponse.json());
-    },
+    }),
     HydrateFallback: Loader,
   },
   {
