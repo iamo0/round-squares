@@ -8,6 +8,9 @@ import GamePage from './pages/game-page/game-page';
 import LoginPage from './pages/login-page/login-page';
 import { GameState, getGameState, type Game } from '@round-square/shared';
 import GameResultPage from './pages/game-result-page/game-result-page';
+import { getCookie, setCookie } from 'typescript-cookie';
+
+const AUTH_COOKIE_NAME = "session_id";
 
 type RawGameResponse = {
   id: "string",
@@ -19,6 +22,12 @@ function Loader() {
 }
 
 function checkAuth() {
+  const session = getCookie(AUTH_COOKIE_NAME);
+
+  if (session === undefined) {
+    return redirect("/login");
+  }
+
   return null;
 }
 
@@ -146,6 +155,13 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+    action: async function loginAction({ request }) {
+      const data = await request.formData();
+      setCookie(AUTH_COOKIE_NAME, data.get("login") as string, {
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+      });
+      return redirect("/");
+    }
   },
   {
     path: "/404",

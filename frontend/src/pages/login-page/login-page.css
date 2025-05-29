@@ -1,0 +1,38 @@
+.signin {
+  margin: 0 auto;
+  width: var(--screen-size-min);
+}
+
+.signin-title {
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.signin-fieldset {
+  border: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0;
+  margin: 0;
+}
+
+.signin-form-field {
+  background: transparent;
+  border: solid 1px var(--accent-color-dim);
+  border-radius: 5px;
+  color: var(--accent-color);
+  font-size: var(--base-font-size);
+  font-family: var(--base-font-family);
+  padding: 0.5em;
+}
+
+.signin-form-field:focus {
+  border-color: var(--accent-color);
+}
